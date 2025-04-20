@@ -4,7 +4,7 @@ setlocal ENABLEEXTENSIONS
 :: Set variables
 set IMAGE_NAME=helloworldtest
 set CONTAINER_NAME=helloworld-container
-set PORT=8080
+set PORT=8081
 
 echo.
 echo === Step 1: Building the Spring Boot app using Gradle ===
