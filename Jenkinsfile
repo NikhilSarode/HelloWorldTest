@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         gradle 'Gradle 8.6' // The name defined in Jenkins Global Tool Configuration
+	jdk 'jdk-21'
     }
 
     environment {
