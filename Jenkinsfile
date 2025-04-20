@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        gradle 'gradle' // The name defined in Jenkins Global Tool Configuration
+        gradle 'Gradle 8.6' // The name defined in Jenkins Global Tool Configuration
     }
 
     environment {
