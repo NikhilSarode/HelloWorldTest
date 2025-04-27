@@ -24,5 +24,5 @@ tasks.test {
 }
 
 application {
-    mainClass.set("com.example.helloworldtest.HelloWorldTestApplication")
+    mainClass.set("com.example.HelloWorldTestApplication")
 }

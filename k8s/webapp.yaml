@@ -16,25 +16,25 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: helloworldtest
+          image: nikhil575/helloworldtest:latest
           ports:
             - containerPort: 8090
           env:
-            - name: USER_NAME
+            - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
-                  key: mongo-user
-            - name: USER_PWD
+                  name: mysql-secret
+                  key: mysql-user
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
-                  key: mongo-password
+                  name: mysql-secret
+                  key: mysql-password
             - name: DB_URL
               valueFrom:
                 configMapKeyRef:
-                  name: mongo-config
-                  key: mongo-url
+                  name: mysql-config
+                  key: mysql-url
 ---
 apiVersion: v1
 kind: Service
