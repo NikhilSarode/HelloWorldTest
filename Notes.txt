@@ -1,8 +1,39 @@
 kubectl create configmap liquibase-changelog-configmap --from-file=changelog.xml=db/changelog/db.changelog-master.xml
 
-
+--To query mysql pod
 kubectl run mysql-client --rm -it --image=mysql:8 --restart=Never -- bash
 mysql -h mysql-service -P 27017 -u root -p
 then do mysql commands
 
+
+To deploy in the cluster:-
+
+minikube start --driver=docker 		(only if not already started)
+kubectl apply -f k8s/mysql-config.yaml
+kubectl apply -f k8s/mysql-secret.yaml
+kubectl apply -f k8s/mysql.yaml  	(wait for startup)
+kubectl apply -f k8s/mysql-liquibase-job.yaml
+kubectl apply -f k8s/webapp.yaml
+
 kubectl port-forward service/webapp-service 8010:3000
+
+
+
+kubectl get all
+kubectl get pods
+kubectl logs <pod-name> -f
+kubectl logs <pod-name>
+kubectl delete deployment mysql-deployment
+kubectl delete pod <pod-name>
+
+
+
+
+Docker commands:-
+docker build -t <image-name> .
+here . is location of dockerfile
+
+docker tag <image-name> nikhil575/<image-name>:latest
+
+docker push nikhil575/<image-name>:latest
+
