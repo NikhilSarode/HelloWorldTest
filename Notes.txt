@@ -1,0 +1,8 @@
+kubectl create configmap liquibase-changelog-configmap --from-file=changelog.xml=db/changelog/db.changelog-master.xml
+
+
+kubectl run mysql-client --rm -it --image=mysql:8 --restart=Never -- bash
+mysql -h mysql-service -P 27017 -u root -p
+then do mysql commands
+
+kubectl port-forward service/webapp-service 8010:3000
