@@ -47,7 +47,7 @@ docker run --rm ^
   --driver=com.mysql.cj.jdbc.Driver ^
   --classpath=/liquibase/mysql-connector-java-9.3.0.jar ^
   --searchPath=/liquibase/changelog ^
-  --changeLogFile=db.changelog-master.xml ^
+  --changeLogFile=changelog.xml ^
   --username=%MYSQL_USER% ^
   --password=%MYSQL_PASSWORD% ^
   update

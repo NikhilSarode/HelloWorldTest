@@ -5,8 +5,10 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="1" author="nik">
-        <createDatabase databaseName="demo_db"/>
-    </changeSet>
+    <sql>
+        CREATE DATABASE IF NOT EXISTS demo_db;
+    </sql>
+</changeSet>
 
     <include file="create-tables.xml"/>
     <include file="insert-data.xml"/>

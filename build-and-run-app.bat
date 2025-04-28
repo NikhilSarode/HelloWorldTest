@@ -33,7 +33,7 @@ docker rm %CONTAINER_NAME% >nul 2>&1
 
 echo.
 echo === Step 4: Running Docker container in foreground (Ctrl+C to stop) ===
-docker run --rm --name %CONTAINER_NAME% -p %PORT%:8080 %IMAGE_NAME%
+docker run --rm --name %CONTAINER_NAME% -e SPRING_PROFILES_ACTIVE=dev -p %PORT%:8090 %IMAGE_NAME%
 
 if %errorlevel% neq 0 (
     echo Docker container failed to start!
