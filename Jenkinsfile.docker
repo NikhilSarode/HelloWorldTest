@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "xyz/abc"
+        DOCKER_IMAGE = "nikhil575/helloworldtest"
     }
 
     stages {
@@ -14,8 +14,12 @@ pipeline {
 
         stage('Download Artifact') {
             steps {
-                // Load previously archived JAR from build pipeline
-                copyArtifacts(projectName: 'your-build-job-name', filter: 'build/libs/*.jar', flatten: true)
+                copyArtifacts(
+                    projectName: 'HW-Build',
+                    selector: lastSuccessful(),
+                    filter: 'build/libs/*.jar',
+                    flatten: true
+                )
             }
         }
 
@@ -36,6 +40,8 @@ pipeline {
                         sh """
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                             docker push $DOCKER_IMAGE:$tag
+                            docker tag $DOCKER_IMAGE:$tag $DOCKER_IMAGE:latest
+                            docker push $DOCKER_IMAGE:latest
                         """
                     }
                 }
