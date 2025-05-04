@@ -23,6 +23,15 @@ pipeline {
             }
         }
 
+        stage('Organize Artifact') {
+            steps {
+                bat '''
+                    mkdir build\\libs
+                    move app.jar build\\libs\\app.jar
+                '''
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
