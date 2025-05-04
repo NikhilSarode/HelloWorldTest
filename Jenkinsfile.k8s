@@ -24,18 +24,7 @@ pipeline {
             steps {
                 script {
                     echo "Waiting for MySQL pod to be ready..."
-                    bat '''
-                    :loop
-                    FOR /F "tokens=*" %%i IN ('kubectl get pods -l app=mysql -o jsonpath="{.items[0].status.containerStatuses[0].ready}"') DO (
-                        SET "READY=%%i"
-                    )
-                    IF "%READY%"=="true" (
-                        echo MySQL pod is ready.
-                    ) ELSE (
-                        timeout /t 5 >nul
-                        goto loop
-                    )
-                    '''
+                    bat 'kubectl wait --for=condition=ready pod -l app=mysql --timeout=240s'
                 }
             }
         }
