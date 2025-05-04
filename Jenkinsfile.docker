@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "xyz/abc"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Download Artifact') {
+            steps {
+                // Load previously archived JAR from build pipeline
+                copyArtifacts(projectName: 'your-build-job-name', filter: 'build/libs/*.jar', flatten: true)
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def tag = "${env.BUILD_NUMBER}"
+                    sh "docker build -t $DOCKER_IMAGE:$tag ."
+                }
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        def tag = "${env.BUILD_NUMBER}"
+                        sh """
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker push $DOCKER_IMAGE:$tag
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
