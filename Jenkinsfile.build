@@ -32,7 +32,8 @@ pipeline {
 
         stage('Archive Artifact') {
              steps {
-                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+		bat 'copy build\\libs\\HelloWorldTest-0.0.1-SNAPSHOT.jar build\\libs\\app.jar'
+                archiveArtifacts artifacts: 'build/libs/app.jar', fingerprint: true
              }
         }
     }

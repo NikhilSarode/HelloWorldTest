@@ -17,7 +17,7 @@ pipeline {
                 copyArtifacts(
                     projectName: 'HW-Build',
                     selector: lastSuccessful(),
-                    filter: 'build/libs/*.jar',
+                    filter: 'build/libs/app.jar',
                     flatten: true
                 )
             }
