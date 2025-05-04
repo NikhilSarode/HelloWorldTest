@@ -3,70 +3,70 @@ pipeline {
 
     environment {
         K8S_MANIFEST_DIR = 'k8s'
+        LIQUIBASE_JOB_NAME = 'liquibase-job'       // Update if your job name differs
+        LIQUIBASE_NAMESPACE = 'default'            // Change if you're using a different namespace
+        DB_POD_LABEL = 'app=mysql'                 // Adjust to match your MySQL pod label
     }
 
     stages {
         stage('Deploy MySql DB') {
             steps {
                 script {
-                    echo "Applying Kubernetes manifests..."
+                    echo "Applying MySQL Kubernetes manifests..."
                     bat "kubectl apply -f %K8S_MANIFEST_DIR%\\mysql-config.yaml"
                     bat "kubectl apply -f %K8S_MANIFEST_DIR%\\mysql-secret.yaml"
                     bat "kubectl apply -f %K8S_MANIFEST_DIR%\\mysql.yaml"
                 }
             }
         }
-    }
 
-    stage('Wait for MySQL Pod') {
-                steps {
-                    script {
-                        echo "Waiting for MySQL pod to be ready..."
-                        bat '''
-                        :loop
-                        FOR /F "tokens=*" %%i IN ('kubectl get pods -l %DB_POD_LABEL% -o jsonpath="{.items[0].status.containerStatuses[0].ready}"') DO (
-                            SET "READY=%%i"
-                        )
-                        IF "%READY%"=="true" (
-                            echo MySQL pod is ready.
-                        ) ELSE (
-                            timeout /t 5 >nul
-                            goto loop
-                        )
-                        '''
-                    }
+        stage('Wait for MySQL Pod') {
+            steps {
+                script {
+                    echo "Waiting for MySQL pod to be ready..."
+                    bat '''
+                    :loop
+                    FOR /F "tokens=*" %%i IN ('kubectl get pods -l app=mysql -o jsonpath="{.items[0].status.containerStatuses[0].ready}"') DO (
+                        SET "READY=%%i"
+                    )
+                    IF "%READY%"=="true" (
+                        echo MySQL pod is ready.
+                    ) ELSE (
+                        timeout /t 5 >nul
+                        goto loop
+                    )
+                    '''
                 }
             }
+        }
 
-    stages {
         stage('Liquibase migration') {
             steps {
                 script {
-                    echo "Applying Kubernetes manifests..."
+                    echo "Applying Liquibase job..."
+                    bat "kubectl delete job %LIQUIBASE_JOB_NAME% --ignore-not-found -n %LIQUIBASE_NAMESPACE%"
                     bat "kubectl apply -f %K8S_MANIFEST_DIR%\\mysql-liquibase-job.yaml"
                 }
             }
         }
-    }
 
-    stage('Wait for Liquibase Job') {
-                steps {
-                    script {
-                        echo "Waiting for Liquibase job to complete..."
-                        // Wait for the job to succeed
-                        def waitCommand = "kubectl wait --for=condition=complete --timeout=120s job/%LIQUIBASE_JOB_NAME% -n %LIQUIBASE_NAMESPACE%"
-                        def result = bat(returnStatus: true, script: waitCommand)
-                        if (result != 0) {
-                            error("Liquibase job failed or timed out.")
-                        }
+        stage('Wait for Liquibase Job') {
+            steps {
+                script {
+                    echo "Waiting for Liquibase job to complete..."
+                    def waitCommand = "kubectl wait --for=condition=complete --timeout=120s job/%LIQUIBASE_JOB_NAME% -n %LIQUIBASE_NAMESPACE%"
+                    def result = bat(returnStatus: true, script: waitCommand)
+                    if (result != 0) {
+                        error("Liquibase job failed or timed out.")
                     }
                 }
             }
+        }
 
-    stage('Deploying app server') {
+        stage('Deploying App Server') {
             steps {
                 script {
-                    echo "Applying Kubernetes manifests..."
+                    echo "Applying App Server manifests..."
                     bat "kubectl apply -f %K8S_MANIFEST_DIR%\\webapp.yaml"
                 }
             }
