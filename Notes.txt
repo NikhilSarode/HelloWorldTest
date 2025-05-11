@@ -10,6 +10,7 @@ To deploy in the cluster:-
 
 minikube start --driver=docker 		(only if not already started)
 kubectl apply -f k8s/mysql-config.yaml
+kubectl apply -f k8s/service-name-config.yaml
 kubectl apply -f k8s/mysql-secret.yaml
 kubectl apply -f k8s/mysql.yaml  	(wait for startup)
 kubectl apply -f k8s/mysql-liquibase-job.yaml
@@ -30,10 +31,10 @@ kubectl delete pod <pod-name>
 
 
 Docker commands:-
-docker build -t <image-name> .
+docker build -t helloworldtest .
 here . is location of dockerfile
 
-docker tag <image-name> nikhil575/<image-name>:latest
+docker tag helloworldtest nikhil575/helloworldtest:latest
 
-docker push nikhil575/<image-name>:latest
+docker push nikhil575/helloworldtest:latest
 

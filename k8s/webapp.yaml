@@ -35,6 +35,11 @@ spec:
                 configMapKeyRef:
                   name: mysql-config
                   key: mysql-url
+            - name: DEPT_SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: service-name-config
+                  key: dept-service-name
 ---
 apiVersion: v1
 kind: Service
