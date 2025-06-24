@@ -38,3 +38,14 @@ docker tag helloworldtest nikhil575/helloworldtest:latest
 
 docker push nikhil575/helloworldtest:latest
 
+
+Question:- On local development if i want to upgrade one of the microservice for which other team
+has made some changes then how to do it ?
+Ans:- just reapply the deployment
+kubectl apply -f k8s/mysql-config.yaml
+By doing so kubectl will detect that the docke r image version is changed. So it will redeploy.
+In case you stick to the :latest tag then do
+kubectl rollout restart deployment order-service
+make sure that your yaml has  imagePullPolicy: Always
+
+
