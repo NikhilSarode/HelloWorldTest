@@ -48,4 +48,9 @@ In case you stick to the :latest tag then do
 kubectl rollout restart deployment order-service
 make sure that your yaml has  imagePullPolicy: Always
 
+port forwarding commands using script
+powershell -ExecutionPolicy Bypass -File start-port-forward.ps1
+powershell -ExecutionPolicy Bypass -File stop-port-forward.ps1
+
+
 
