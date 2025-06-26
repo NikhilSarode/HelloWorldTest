@@ -52,5 +52,11 @@ port forwarding commands using script
 powershell -ExecutionPolicy Bypass -File start-port-forward.ps1
 powershell -ExecutionPolicy Bypass -File stop-port-forward.ps1
 
+to verify whether process is successful "Get-Process kubectl" in powershell
+
+
+
+kubectl apply -k overlays/dev
+kubectl apply -k overlays/prod
 
 
