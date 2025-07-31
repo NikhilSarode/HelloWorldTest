@@ -21,19 +21,23 @@ public class HeaderRolesAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
 
-        String rolesHeader = request.getHeader("X-Roles");
-        if (rolesHeader != null && !rolesHeader.isBlank()) {
-            List<SimpleGrantedAuthority> authorities = Arrays.stream(rolesHeader.split(","))
-                    .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
-                    .map(SimpleGrantedAuthority::new)
-                    .toList();
+        // Only set auth if it's not already set and header is present
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            String rolesHeader = request.getHeader("X-Roles");
+            if (rolesHeader != null && !rolesHeader.isBlank()) {
+                List<SimpleGrantedAuthority> authorities = Arrays.stream(rolesHeader.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
 
-            var auth = new UsernamePasswordAuthenticationToken("user", null, authorities);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+                var auth = new UsernamePasswordAuthenticationToken("user", null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
         }
 
         chain.doFilter(request, response);
     }
 }
+

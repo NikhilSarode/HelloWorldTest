@@ -15,9 +15,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/hello-world/hello").permitAll()
-                        .requestMatchers("/api/hello-world/helloAuthUser").hasAnyAuthority("ROLE_USER")
-                        .requestMatchers("/api/hello-world/helloAuthAdmin").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/hello","/error").permitAll()
+                        .requestMatchers("/helloAuthUser").hasAnyAuthority("ROLE_USER")
+                        .requestMatchers("/helloAuthAdmin").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new HeaderRolesAuthFilter(), UsernamePasswordAuthenticationFilter.class);
