@@ -17,7 +17,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/hello","/error").permitAll()
                         .requestMatchers("/helloAuthUser").hasAnyAuthority("ROLE_USER")
-                        .requestMatchers("/helloAuthAdmin").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/helloAuthAdmin","/notification").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new HeaderRolesAuthFilter(), UsernamePasswordAuthenticationFilter.class);
